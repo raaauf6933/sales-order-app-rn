@@ -6,23 +6,49 @@ import colors from "../../config/colors";
 import { useAuth } from "../../context/Auth/context";
 import { useEffect, useState } from "react";
 
-const buttons = (actions) => {
+const customerButtons = (actions) => {
   return [
     {
+      key: 1,
       label: "Edit Profile",
       nav_screen: routes.LISTINGS,
     },
     {
+      key: 2,
       label: "My Orders",
       nav_screen: routes.LISTINGS,
     },
     {
+      key: 3,
       label: "Log-out",
       nav_screen: routes.LISTINGS,
       style: {
         color: colors.danger,
         fontWeight: "bold",
       },
+      action: () => actions.logout(),
+    },
+  ];
+};
+
+const adminButtons = (actions) => {
+  return [
+    {
+      key: 1,
+      label: "Edit Profile",
+      nav_screen: routes.LISTINGS,
+      icon: "account-edit-outline",
+    },
+    {
+      key: 2,
+      label: "Log-out",
+      nav_screen: routes.LISTINGS,
+      style: {
+        color: colors.danger,
+        fontWeight: "bold",
+      },
+
+      icon: "logout",
       action: () => actions.logout(),
     },
   ];
@@ -55,7 +81,7 @@ function MyAccount() {
           </View>
         </View>
 
-        <ListButton buttons={buttons({ logout })} />
+        <ListButton buttons={adminButtons({ logout })} />
       </View>
     </Wrapper>
   );

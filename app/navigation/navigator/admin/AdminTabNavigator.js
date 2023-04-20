@@ -5,6 +5,7 @@ import routes from "../../routes";
 import ProductsScreen from "../../../screens/Products/Products";
 import ProductNavigator from "./ProductNavigator";
 import OrderNavigator from "./OrderNavigator";
+import AccountNavigator from "./AccountNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -43,8 +44,20 @@ function AdminTabNavigator() {
         }}
       />
       <Tab.Screen
+        name={routes.USERS_TAB}
+        component={AccountNavigator}
+        options={{
+          tabBarIcon: ({ size, color }) => (
+            <MaterialCommunityIcons name="account" size={size} color={color} />
+          ),
+          tabBarLabel: "Users",
+          tabBarLabelStyle,
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
         name={routes.ACCOUNT_TAB}
-        component={ProductsScreen}
+        component={AccountNavigator}
         options={{
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons name="account" size={size} color={color} />

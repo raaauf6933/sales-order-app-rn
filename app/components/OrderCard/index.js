@@ -10,20 +10,31 @@ import { ScrollView } from "react-native-gesture-handler";
 import colors from "./../../config/colors";
 import Text from "./../Text";
 
-const OrderCard = ({ image, onPress, title, subTitle, quantity }) => (
+import OrderStatus from "./OrderStatus";
+
+const OrderCard = ({
+  image,
+  onPress,
+  title,
+  subTitle,
+  quantity,
+  status,
+  data,
+}) => (
   <TouchableWithoutFeedback onPress={onPress}>
     <View style={styles.card}>
-      <View>
+      <View style={styles.headerContainer}>
         <View
           style={{
-            padding: 15,
             flexDirection: "row",
           }}
         >
-          <Text>ORDER: </Text>
-          <Text>AES23G1125</Text>
+          <Text style={{ fontWeight: "100" }}>ORDER: </Text>
+          <Text style={{ fontWeight: "bold" }}>AES23G1125</Text>
         </View>
-        <View></View>
+        <View>
+          <OrderStatus status={status} />
+        </View>
       </View>
       <View
         style={{
@@ -31,35 +42,17 @@ const OrderCard = ({ image, onPress, title, subTitle, quantity }) => (
           alignItems: "center",
         }}
       >
-        <View
-          style={{
-            height: 100,
-            maxWidth: 100,
-            flex: 1,
-          }}
-        >
-          <Image style={styles.image} source={image} />
-        </View>
         <View style={styles.detailsContainer}>
-          <Text style={styles.subTitle}>Product Name: {title} </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              flex: 1,
-            }}
-          >
-            <View>
-              <Text style={styles.subTitle}>Product ID: AES2121</Text>
-              <Text style={styles.subTitle}>Price: {subTitle}</Text>
-              <Text style={styles.qtyTitle}>Available Stock: {quantity}</Text>
-            </View>
-            {/* <View style={{ alignSelf: "flex-end" }}>
-              <PlainButton style={styles.removeBtn}>
-                <Text style={{ color: colors.danger }}>Remove</Text>
-              </PlainButton>
-            </View> */}
-          </View>
+          <Text style={styles.subTitle}>
+            Customer: <Text style={{ fontWeight: "100" }}> {title}</Text>{" "}
+          </Text>
+          <Text style={styles.subTitle}>
+            Contact Number:{" "}
+            <Text style={{ fontWeight: "100" }}> {data.contact_number}</Text>{" "}
+          </Text>
+          <Text style={styles.subTitle}>
+            Total Amount: <Text style={{ fontWeight: "100" }}> {subTitle}</Text>{" "}
+          </Text>
         </View>
       </View>
     </View>
@@ -67,6 +60,17 @@ const OrderCard = ({ image, onPress, title, subTitle, quantity }) => (
 );
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomColor: "#d1d1d1",
+    borderStyle: "solid",
+    borderBottomWidth: 0.2,
+    backgroundColor: "#f5fafc",
+  },
   removeBtn: {
     borderRadius: 43,
     justifyContent: "center",

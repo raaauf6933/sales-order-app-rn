@@ -19,51 +19,67 @@ import OrderCard from "../../components/OrderCard";
 const listData = [
   {
     id: "1",
-    title: "Gentlemans Collection",
+    customer: "Juan Dela Cruz",
+    contact_number: "09066000801",
     price: PhpFormatter(6999),
     image: require("../../../assets/wine_1.jpg"),
+    status: "NEW_ORDER",
   },
   {
     id: "2",
-    title: "CAPERCAILLIE CHARDONNAY",
+    customer: "Juan Dela Cruz",
+    contact_number: "09066000801",
     price: PhpFormatter(7888),
     image: require("../../../assets/wine_3.jpg"),
+    status: "IN_PROCESS",
   },
   {
     id: "3",
-    title: "ENDEAVOUR - Vintage Beer",
+    customer: "Juan Dela Cruz",
+    contact_number: "09066000801",
     price: PhpFormatter(240),
     image: require("../../../assets/wine_4.jpg"),
+    status: "SHIPPED",
   },
   {
     id: "4",
-    title: "ENDEAVOUR - Vintage Beer",
+    customer: "Juan Dela Cruz",
+    contact_number: "09066000801",
     price: PhpFormatter(240),
     image: require("../../../assets/wine_4.jpg"),
+    status: "COMPLETE",
   },
   {
     id: "5",
-    title: "ENDEAVOUR - Vintage Beer",
+    customer: "Juan Dela Cruz",
+    contact_number: "09066000801",
     price: PhpFormatter(240),
     image: require("../../../assets/wine_4.jpg"),
+    status: "SHIPPED",
   },
   {
     id: "6",
-    title: "ENDEAVOUR - Vintage Beer",
+    customer: "Juan Dela Cruz",
+    contact_number: "09066000801",
     price: PhpFormatter(240),
     image: require("../../../assets/wine_4.jpg"),
+    status: "COMPLETE",
   },
   {
     id: "7",
-    title: "ENDEAVOUR - Vintage Beer",
+    customer: "Juan Dela Cruz",
+    contact_number: "09066000801",
     price: PhpFormatter(240),
     image: require("../../../assets/wine_4.jpg"),
+    status: "COMPLETE",
   },
   {
     id: "8",
-    title: "ENDEAVOUR - Vintage Beer",
+    customer: "Juan Dela Cruz",
+    contact_number: "09066000801",
     price: PhpFormatter(240),
     image: require("../../../assets/wine_4.jpg"),
+    status: "NEW_ORDER",
   },
 ];
 
@@ -82,21 +98,23 @@ function Products(props) {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <OrderCard
+              data={item}
               image={item.image}
-              onPress={() => navigation.navigate(Routes.LISTING_DETAILS, item)}
-              title={item.title}
+              onPress={() => navigation.navigate(Routes.ORDER_DETAILS, item)}
+              title={item.customer}
               subTitle={item.price}
               quantity={4}
+              status={item.status}
             />
           )}
         />
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.addBtn}
           onPress={() => navigation.navigate(Routes.PRODUCT_CREATE)}
         >
           <MaterialCommunityIcons name="plus" size={30} color="#01a699" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </Wrapper>
     </View>
   );

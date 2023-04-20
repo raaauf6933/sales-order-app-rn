@@ -1,5 +1,6 @@
 const routes = Object.freeze({
   LOGIN: "Login",
+  ADMIN_LOGIN: "AdminLogin",
   WELCOME: "Welcome",
   REGISTER: "Register",
   LISTINGS: "Listings",
@@ -15,6 +16,8 @@ const routes = Object.freeze({
   PRODUCT_CREATE: "ProductCreate",
   ORDERS_TAB: "OrderTab",
   ORDERS: "Orders",
+  ORDER_DETAILS: "OrderDetails",
+  USERS_TAB: "UsersTab",
 });
 
 export default routes;

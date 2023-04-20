@@ -1,36 +1,27 @@
 import React from "react";
-
-import { Image, StyleSheet, View, Text } from "react-native";
+import { Image, StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import * as Yup from "yup";
 
 import Wrapper from "../../components/Wrapper";
 import { Form, FormField, SubmitButton } from "../../components/Form";
+import colors from "../../config/colors";
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-const auth = getAuth();
+import { useAuth } from "../../context/Auth/context";
+
+import { db } from "./../../../firebase";
+import { collection, getDocs } from "firebase/firestore";
+import routes from "../../navigation/routes";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(4).label("Password"),
 });
 
-const Register = () => {
-  const handleRegistration = async ({ email, password }) => {
-    console.log({ email, password });
+const Login = ({ navigation }) => {
+  const { login } = useAuth();
 
-    try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      const user = result.user;
-
-      console.log(user.email);
-    } catch (error) {
-      alert(error.message);
-    }
+  const handleLogin = async ({ email, password }) => {
+    await login({ email, password });
   };
 
   return (
@@ -40,17 +31,19 @@ const Register = () => {
           source={require("../../../assets/logo-red.png")}
           style={styles.logo}
         />
+
         <Text
           style={{
             fontSize: 30,
             paddingBottom: 5,
           }}
         >
-          Sign in to your account
+          Hi Store Admin, Please Sign in
         </Text>
+
         <Form
           initialValues={{ email: "", password: "" }}
-          onSubmit={handleRegistration}
+          onSubmit={handleLogin}
           validationSchema={validationSchema}
         >
           <FormField
@@ -77,8 +70,27 @@ const Register = () => {
               height: 50,
             }}
           />
-          <SubmitButton title="Register" color="secondary" />
+          <SubmitButton
+            title="Login"
+            style={{
+              height: 50,
+            }}
+          />
         </Form>
+        <TouchableOpacity onPress={() => navigation.navigate(routes.LOGIN)}>
+          <View>
+            <Text
+              style={{
+                marginTop: 23,
+                color: colors.secondary,
+                fontSize: 16,
+                fontWeight: "600",
+              }}
+            >
+              Login as customer
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </Wrapper>
   );
@@ -103,4 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Register;
+export default Login;

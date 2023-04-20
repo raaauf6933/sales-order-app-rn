@@ -20,7 +20,7 @@ function AppScreen() {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      {true ? <AdminAppStack /> : <CustomerAuthStack />}
+      {isAuthenticated ? <AdminAppStack /> : <CustomerAuthStack />}
     </NavigationContainer>
   );
 }
