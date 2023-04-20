@@ -1,4 +1,10 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 
 function ListButton(props) {
   const { buttons } = props;
@@ -8,7 +14,9 @@ function ListButton(props) {
         data={buttons}
         renderItem={({ item, index, arr }) => (
           <View style={buttons.lenght === index ? null : styles.itemContainer}>
-            <Text style={[item.style, styles.item]}>{item.label}</Text>
+            <TouchableOpacity onPress={item.action}>
+              <Text style={[item.style, styles.item]}>{item.label}</Text>
+            </TouchableOpacity>
           </View>
         )}
       />

@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
 
-import routes from "./routes";
-import MyAccountScreen from "../screens/Account/MyAccount";
+import routes from "../../routes";
+import MyAccountScreen from "../../../screens/Account/MyAccount";
 
 function AccountNavigator() {
   return (

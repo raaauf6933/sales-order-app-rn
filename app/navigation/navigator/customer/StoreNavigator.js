@@ -1,19 +1,19 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
 
-import routes from "./routes";
-import WelcomeScreen from "../screens/Auth/Welcome";
+import ListingScreen from "../../../screens/Store/Listing";
+import routes from "../../routes";
 
-function AuthNavigator() {
+function StoreNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name={routes.LOGIN} component={WelcomeScreen} />
+      <Stack.Screen name={routes.LISTINGS} component={ListingScreen} />
     </Stack.Navigator>
   );
 }
 
-export default AuthNavigator;
+export default StoreNavigator;

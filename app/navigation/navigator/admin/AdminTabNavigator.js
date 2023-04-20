@@ -1,42 +1,50 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import StoreNavigator from "./StoreNavigator";
-import CartNavigator from "./CartNavigator";
-import AccountNavigator from "./AccountNavigator";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import routes from "./routes";
+import routes from "../../routes";
+import ProductsScreen from "../../../screens/Products/Products";
+import ProductNavigator from "./ProductNavigator";
+import OrderNavigator from "./OrderNavigator";
 
 const Tab = createBottomTabNavigator();
 
-function TabNavigator() {
+function AdminTabNavigator() {
   return (
     <Tab.Navigator>
       <Tab.Screen
         name={routes.STORE_TAB}
-        component={StoreNavigator}
+        component={ProductNavigator}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <MaterialCommunityIcons name="store" size={size} color={color} />
+            <MaterialCommunityIcons
+              name="cube-outline"
+              size={size}
+              color={color}
+            />
           ),
-          tabBarLabel: "Store",
+          tabBarLabel: "Products",
           tabBarLabelStyle,
           title: "Store",
         }}
       />
       <Tab.Screen
-        name={routes.MY_CART_TAB}
-        component={CartNavigator}
+        name={routes.ORDERS_TAB}
+        component={OrderNavigator}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <MaterialCommunityIcons name="cart" size={size} color={color} />
+            <MaterialCommunityIcons
+              name="cart-check"
+              size={size}
+              color={color}
+            />
           ),
-          tabBarLabel: "My Cart",
+          tabBarLabel: "Orders",
           tabBarLabelStyle,
         }}
       />
       <Tab.Screen
         name={routes.ACCOUNT_TAB}
-        component={AccountNavigator}
+        component={ProductsScreen}
         options={{
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons name="account" size={size} color={color} />
@@ -54,4 +62,4 @@ const tabBarLabelStyle = StyleSheet.create({
   fontSize: 13,
 });
 
-export default TabNavigator;
+export default AdminTabNavigator;

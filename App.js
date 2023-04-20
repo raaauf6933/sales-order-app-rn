@@ -1,41 +1,26 @@
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-
+import AuthProvider, { useAuth } from "./app/context/Auth/context";
 import { NavigationContainer } from "@react-navigation/native";
-import TabNavigator from "./app/navigation/TabNavigator";
-// import AuthNavigator from "./app/navigation/AuthNavigator";
-import routes from "./app/navigation/routes";
-import ListingDetails from "./app/screens/Store/ListingDetails";
-import SuccessCheckout from "./app/screens/Cart/SuccessCheckout";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-const Stack = createNativeStackNavigator();
+import { navigationRef } from "./app/utils/rootNavigation";
+import CustomerAppStack from "./app/navigation/CustomerAppStack";
+import CustomerAuthStack from "./app/navigation/CustomerAuthStack";
+import AdminAppStack from "./app/navigation/AdminAppStack";
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="tabs"
-          component={TabNavigator}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name={routes.LISTING_DETAILS}
-          component={ListingDetails}
-          options={{
-            headerTitle: "",
-          }}
-        />
-        <Stack.Screen
-          name={routes.SUCCESS_CHECKOUT}
-          component={SuccessCheckout}
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack.Navigator>
-      {/* <Stack.Screen name={routes.LOGIN} component={LoginScreen} /> */}
+    <AuthProvider>
+      <AppScreen />
+    </AuthProvider>
+  );
+}
+
+function AppScreen() {
+  const { isAuthenticated } = useAuth();
+
+  return (
+    <NavigationContainer ref={navigationRef}>
+      {true ? <AdminAppStack /> : <CustomerAuthStack />}
     </NavigationContainer>
   );
 }

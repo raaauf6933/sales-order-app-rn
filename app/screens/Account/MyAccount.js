@@ -3,23 +3,44 @@ import Wrapper from "../../components/Wrapper";
 import ListButton from "../../components/ListButton";
 import routes from "../../navigation/routes";
 import colors from "../../config/colors";
+import { useAuth } from "../../context/Auth/context";
+import { useEffect, useState } from "react";
 
-const buttons = [
-  {
-    label: "Edit Profile",
-    nav_screen: routes.LISTINGS,
-  },
-  {
-    label: "Log-out",
-    nav_screen: routes.LISTINGS,
-    style: {
-      color: colors.danger,
-      fontWeight: "bold",
+const buttons = (actions) => {
+  return [
+    {
+      label: "Edit Profile",
+      nav_screen: routes.LISTINGS,
     },
-  },
-];
+    {
+      label: "My Orders",
+      nav_screen: routes.LISTINGS,
+    },
+    {
+      label: "Log-out",
+      nav_screen: routes.LISTINGS,
+      style: {
+        color: colors.danger,
+        fontWeight: "bold",
+      },
+      action: () => actions.logout(),
+    },
+  ];
+};
 
 function MyAccount() {
+  const { logout, getUser } = useAuth();
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const result = await getUser();
+      setUser(result);
+    };
+
+    checkUser();
+  }, []);
+
   return (
     <Wrapper>
       <View style={styles.container}>
@@ -30,11 +51,11 @@ function MyAccount() {
           />
           <View style={styles.nameContainer}>
             <Text style={styles.title}>Juan Dela Cruz</Text>
-            <Text style={styles.email}>jdelacruz@gmail.com</Text>
+            <Text style={styles.email}>{user?.email}</Text>
           </View>
         </View>
 
-        <ListButton buttons={buttons} />
+        <ListButton buttons={buttons({ logout })} />
       </View>
     </Wrapper>
   );

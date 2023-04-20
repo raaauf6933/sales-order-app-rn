@@ -1,9 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
 
-import MyCart from "../screens/Cart/MyCart";
-import Checkout from "../screens/Cart/Checkout";
-import routes from "./routes";
+import MyCart from "../../../screens/Cart/MyCart";
+import routes from "../../routes";
 
 function CartNavigator() {
   return (
