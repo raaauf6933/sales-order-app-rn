@@ -8,16 +8,16 @@ import { useEffect, useState } from "react";
 
 const customerButtons = (actions) => {
   return [
-    {
-      key: 1,
-      label: "Edit Profile",
-      nav_screen: routes.LISTINGS,
-    },
-    {
-      key: 2,
-      label: "My Orders",
-      nav_screen: routes.LISTINGS,
-    },
+    // {
+    //   key: 1,
+    //   label: "Edit Profile",
+    //   nav_screen: routes.LISTINGS,
+    // },
+    // {
+    //   key: 2,
+    //   label: "My Orders",
+    //   nav_screen: routes.LISTINGS,
+    // },
     {
       key: 3,
       label: "Log-out",
@@ -33,14 +33,14 @@ const customerButtons = (actions) => {
 
 const adminButtons = (actions) => {
   return [
+    // {
+    //   key: "0",
+    //   label: "Edit Profile",
+    //   nav_screen: routes.LISTINGS,
+    //   icon: "account-edit-outline",
+    // },
     {
-      key: 1,
-      label: "Edit Profile",
-      nav_screen: routes.LISTINGS,
-      icon: "account-edit-outline",
-    },
-    {
-      key: 2,
+      key: "1",
       label: "Log-out",
       nav_screen: routes.LISTINGS,
       style: {
@@ -55,17 +55,7 @@ const adminButtons = (actions) => {
 };
 
 function MyAccount() {
-  const { logout, getUser } = useAuth();
-  const [user, setUser] = useState();
-
-  useEffect(() => {
-    const checkUser = async () => {
-      const result = await getUser();
-      setUser(result);
-    };
-
-    checkUser();
-  }, []);
+  const { logout, state } = useAuth();
 
   return (
     <Wrapper>
@@ -76,8 +66,10 @@ function MyAccount() {
             style={styles.image}
           />
           <View style={styles.nameContainer}>
-            <Text style={styles.title}>Juan Dela Cruz</Text>
-            <Text style={styles.email}>{user?.email}</Text>
+            <Text style={styles.title}>
+              {state.first_name} {state.last_name}
+            </Text>
+            <Text style={styles.email}> {state.email}</Text>
           </View>
         </View>
 

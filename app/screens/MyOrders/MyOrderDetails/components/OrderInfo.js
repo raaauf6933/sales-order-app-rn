@@ -4,8 +4,8 @@ import { Card, ListItem } from "@rneui/base";
 import colors from "../../../../config/colors";
 import OrderStatus from "../../../../components/OrderCard/OrderStatus";
 
-export default function OrderInfo(props) {
-  const { customer, status } = props.data;
+export default function OrderInfo({ data }) {
+  const { customer } = data;
 
   return (
     <Card containerStyle={styles.card}>
@@ -18,7 +18,7 @@ export default function OrderInfo(props) {
         }}
       >
         <Text style={styles.title}>Order Info</Text>
-        <OrderStatus status={status} />
+        <OrderStatus status={data.status} />
       </View>
       <Card.Divider />
       <View style={{ padding: 10 }}>
@@ -32,7 +32,6 @@ export default function OrderInfo(props) {
         >
           <Text style={styles.title1}>Customer:</Text>
           <Text style={styles.title2}>
-            {" "}
             {customer.first_name} {customer.last_name}
           </Text>
         </View>

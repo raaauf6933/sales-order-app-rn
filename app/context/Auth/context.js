@@ -1,11 +1,16 @@
-import { useState } from "react";
 import "./../../../firebase";
 import { createContext, useContext, useReducer } from "react";
 import { API_URL } from "@env";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import usePost from "./../../hooks/usePost";
 import authStorage from "./utils";
 import { AuthReducer, initialState } from "./reducers";
+import { navigate } from "./../../utils/rootNavigation";
+import routes from "./../../navigation/routes";
 
 const auth = getAuth();
 
@@ -21,11 +26,23 @@ const AuthProvider = ({ children }) => {
         payload: {
           role: e.data.data.role,
           user_id: e.data.data.id,
+          first_name: e.data.data.first_name,
+          last_name: e.data.data.last_name,
+          email: e.data.data.email,
         },
       });
     },
     onError: (err) => {
       dispatch({ type: "SET_ERROR", payload: true });
+    },
+  });
+
+  const [createCustomer, createCustomerOpts] = usePost({
+    onComplete: (e) => {
+      navigate(routes.SUCCESS_REGISTER);
+    },
+    onError: (err) => {
+      console.log(err.message);
     },
   });
 
@@ -52,6 +69,23 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const register = async (form) => {
+    const { email, password } = form;
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+
+      await createCustomer({
+        url: "/create_customer",
+        method: "POST",
+        data: {
+          ...form,
+        },
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   const logout = async () => {
     dispatch({ type: "SET_ERROR", payload: false });
     await authStorage.removeToken();
@@ -68,9 +102,13 @@ const AuthProvider = ({ children }) => {
       value={{
         login,
         logout,
+        register,
         isAuthenticated: state.isLoggedIn,
         error: state.error,
-        loading: state.loading || verifyAccountOpts.loading,
+        loading:
+          state.loading ||
+          verifyAccountOpts.loading ||
+          createCustomerOpts.loading,
         dispatch,
         role: state.role,
         state,
@@ -87,6 +125,7 @@ export const useAuth = () => {
   const {
     login,
     logout,
+    register,
     isAuthenticated,
     error,
     loading,
@@ -97,6 +136,7 @@ export const useAuth = () => {
 
   return {
     login,
+    register,
     logout,
     isAuthenticated,
     getUser: authStorage.getUser,

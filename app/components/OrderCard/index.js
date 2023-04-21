@@ -11,14 +11,11 @@ import colors from "./../../config/colors";
 import Text from "./../Text";
 
 import OrderStatus from "./OrderStatus";
+import PhpFormatter from "../../utils/currencyFormatter";
 
 const OrderCard = ({
-  image,
   onPress,
-  title,
-  subTitle,
-  quantity,
-  status,
+
   data,
 }) => (
   <TouchableWithoutFeedback onPress={onPress}>
@@ -30,10 +27,10 @@ const OrderCard = ({
           }}
         >
           <Text style={{ fontWeight: "100" }}>ORDER: </Text>
-          <Text style={{ fontWeight: "bold" }}>AES23G1125</Text>
+          <Text style={{ fontWeight: "bold" }}>{data.order_id}</Text>
         </View>
         <View>
-          <OrderStatus status={status} />
+          <OrderStatus status={data.status} />
         </View>
       </View>
       <View
@@ -44,14 +41,25 @@ const OrderCard = ({
       >
         <View style={styles.detailsContainer}>
           <Text style={styles.subTitle}>
-            Customer: <Text style={{ fontWeight: "100" }}> {title}</Text>{" "}
+            Customer:{" "}
+            <Text style={{ fontWeight: "100" }}>
+              {" "}
+              {data.customer.first_name} {data.customer.last_name}
+            </Text>{" "}
           </Text>
           <Text style={styles.subTitle}>
             Contact Number:{" "}
-            <Text style={{ fontWeight: "100" }}> {data.contact_number}</Text>{" "}
+            <Text style={{ fontWeight: "100" }}>
+              {" "}
+              {data.customer.contact_number}
+            </Text>{" "}
           </Text>
           <Text style={styles.subTitle}>
-            Total Amount: <Text style={{ fontWeight: "100" }}> {subTitle}</Text>{" "}
+            Total Amount:{" "}
+            <Text style={{ fontWeight: "100" }}>
+              {" "}
+              {PhpFormatter(data.totalAmount)}
+            </Text>{" "}
           </Text>
         </View>
       </View>

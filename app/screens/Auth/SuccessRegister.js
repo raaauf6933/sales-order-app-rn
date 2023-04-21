@@ -6,7 +6,7 @@ import colors from "../../config/colors";
 
 import routes from "../../navigation/routes";
 
-function SuccessCheckout(props) {
+function SuccessRegister(props) {
   const { navigation } = props;
 
   return (
@@ -18,17 +18,15 @@ function SuccessCheckout(props) {
           color={colors.secondary}
         />
         <View style={styles.textContainer}>
-          <Text style={styles.title}>Order Placed!</Text>
-          <Text style={styles.subTitle}>
-            Your order was placed successfully.
-          </Text>
+          <Text style={styles.title}>Account Successfully Registered!</Text>
+          <Text style={styles.subTitle}>Now login to your account.</Text>
         </View>
 
         <View style={{ width: "100%", paddingHorizontal: 34 }}>
           <AppButton
-            title="Back to Store"
+            title="Back to Login"
             color="secondary"
-            onPress={() => navigation.navigate(routes.MY_ORDERS)}
+            onPress={() => navigation.navigate(routes.LOGIN)}
           />
         </View>
       </View>
@@ -50,6 +48,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 42,
     marginBottom: 5,
+    textAlign: "center",
   },
   subTitle: {
     fontSize: 20,
@@ -57,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SuccessCheckout;
+export default SuccessRegister;

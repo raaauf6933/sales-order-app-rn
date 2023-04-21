@@ -1,6 +1,6 @@
 import React from "react";
-
-import { Image, StyleSheet, View, Text } from "react-native";
+import { useAuth } from "./../../context/Auth/context";
+import { Image, StyleSheet, View, Text, ScrollView } from "react-native";
 import * as Yup from "yup";
 
 import Wrapper from "../../components/Wrapper";
@@ -12,18 +12,17 @@ const auth = getAuth();
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(4).label("Password"),
+  first_name: Yup.string().required().label("First Name"),
+  last_name: Yup.string().required().label("Last Name"),
+  address: Yup.string().required().label("Address"),
+  contact_number: Yup.number().required().label("Contact Number"),
 });
 
 const Register = () => {
-  const handleRegistration = async ({ email, password }) => {
+  const { register, loading } = useAuth();
+  const handleRegistration = async (form) => {
     try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      const user = result.user;
+      await register(form);
     } catch (error) {
       alert(error.message);
     }
@@ -31,51 +30,105 @@ const Register = () => {
 
   return (
     <Wrapper style={styles.container}>
-      <View style={styles.formContainer}>
-        <Image
-          source={require("../../../assets/logo-red.png")}
-          style={styles.logo}
-        />
-        <Text
-          style={{
-            fontSize: 30,
-            paddingBottom: 5,
-          }}
-        >
-          Sign in to your account
-        </Text>
-        <Form
-          initialValues={{ email: "", password: "" }}
-          onSubmit={handleRegistration}
-          validationSchema={validationSchema}
-        >
-          <FormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="email"
-            keyboardType="email-address"
-            name="email"
-            placeholder="Email"
-            textContentType="emailAddress"
-            style={{
-              height: 50,
-            }}
+      <ScrollView>
+        <View style={styles.formContainer}>
+          <Image
+            source={require("../../../assets/logo-red.png")}
+            style={styles.logo}
           />
-          <FormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="lock"
-            name="password"
-            placeholder="Password"
-            secureTextEntry
-            textContentType="password"
+          <Text
             style={{
-              height: 50,
+              fontSize: 30,
+              paddingBottom: 5,
             }}
-          />
-          <SubmitButton title="Register" color="secondary" />
-        </Form>
-      </View>
+          >
+            Create New Account
+          </Text>
+          <Form
+            initialValues={{
+              first_name: "",
+              last_name: "",
+              address: "",
+              email: "",
+              contact_number: "",
+              password: "",
+            }}
+            onSubmit={handleRegistration}
+            validationSchema={validationSchema}
+          >
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="form-textbox"
+              name="first_name"
+              placeholder="First Name"
+              style={{
+                height: 50,
+              }}
+            />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="form-textbox"
+              name="last_name"
+              placeholder="Last Name"
+              style={{
+                height: 50,
+              }}
+            />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="map-marker"
+              name="address"
+              placeholder="Address"
+              style={{
+                height: 50,
+              }}
+            />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="phone"
+              name="contact_number"
+              placeholder="Contact Number"
+              style={{
+                height: 50,
+              }}
+            />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="email"
+              keyboardType="email-address"
+              name="email"
+              placeholder="Email"
+              textContentType="emailAddress"
+              style={{
+                height: 50,
+              }}
+            />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="lock"
+              name="password"
+              placeholder="Password"
+              secureTextEntry
+              textContentType="password"
+              style={{
+                height: 50,
+              }}
+            />
+            <SubmitButton
+              title="Register"
+              color="secondary"
+              disabled={loading}
+              loading={loading}
+            />
+          </Form>
+        </View>
+      </ScrollView>
     </Wrapper>
   );
 };

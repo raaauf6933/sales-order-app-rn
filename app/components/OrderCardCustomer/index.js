@@ -21,7 +21,7 @@ const OrderCardCustomer = ({
   status,
   data,
 }) => {
-  const date = moment().format("MMMM Do YYYY, h:mm a");
+  const date = moment(data.createdAt).format("MMMM Do YYYY, h:mm a");
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
@@ -33,7 +33,7 @@ const OrderCardCustomer = ({
             }}
           >
             <Text style={{ fontWeight: "100" }}>ORDER: </Text>
-            <Text style={{ fontWeight: "bold" }}>AES23G1125</Text>
+            <Text style={{ fontWeight: "bold" }}>{data.order_id}</Text>
           </View>
           <View>
             <OrderStatus status={status} />
@@ -72,8 +72,8 @@ const OrderCardCustomer = ({
                 paddingBottom: 4,
               }}
             >
-              <Text style={styles.title1}>Order Created:</Text>
-              <Text style={styles.title2}>{date}</Text>
+              <Text>Order Created:</Text>
+              <Text>{date}</Text>
             </View>
           </View>
         </View>

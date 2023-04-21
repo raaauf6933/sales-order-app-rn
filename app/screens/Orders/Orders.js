@@ -2,89 +2,51 @@ import {
   StyleSheet,
   FlatList,
   View,
-  Text,
-  TouchableOpacity,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
-
+import { useState, useEffect, useCallback } from "react";
 import colors from "../../config/colors";
 import Routes from "../../navigation/routes";
 import Wrapper from "../../components/Wrapper";
-
+import useApi from "./../../hooks/useApi";
 import PhpFormatter from "../../utils/currencyFormatter";
-
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
 import OrderCard from "../../components/OrderCard";
-
-const listData = [
-  {
-    id: "1",
-    customer: "Juan Dela Cruz",
-    contact_number: "09066000801",
-    price: PhpFormatter(6999),
-    image: require("../../../assets/wine_1.jpg"),
-    status: "NEW_ORDER",
-  },
-  {
-    id: "2",
-    customer: "Juan Dela Cruz",
-    contact_number: "09066000801",
-    price: PhpFormatter(7888),
-    image: require("../../../assets/wine_3.jpg"),
-    status: "IN_PROCESS",
-  },
-  {
-    id: "3",
-    customer: "Juan Dela Cruz",
-    contact_number: "09066000801",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-    status: "SHIPPED",
-  },
-  {
-    id: "4",
-    customer: "Juan Dela Cruz",
-    contact_number: "09066000801",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-    status: "COMPLETE",
-  },
-  {
-    id: "5",
-    customer: "Juan Dela Cruz",
-    contact_number: "09066000801",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-    status: "SHIPPED",
-  },
-  {
-    id: "6",
-    customer: "Juan Dela Cruz",
-    contact_number: "09066000801",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-    status: "COMPLETE",
-  },
-  {
-    id: "7",
-    customer: "Juan Dela Cruz",
-    contact_number: "09066000801",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-    status: "COMPLETE",
-  },
-  {
-    id: "8",
-    customer: "Juan Dela Cruz",
-    contact_number: "09066000801",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-    status: "NEW_ORDER",
-  },
-];
 
 function Products(props) {
   const { navigation } = props;
+  const [refreshing, setRefreshing] = useState(false);
+  const { response, refetch } = useApi({
+    url: "/orders",
+    method: "POST",
+  });
+
+  const orders =
+    response?.data && response?.data?.data
+      ? response?.data?.data.map((e) => ({
+          id: e.id,
+          order_id: e.order_id,
+          customer: `${e.customer.first_name} ${e.customer.last_name}`,
+          contact_number: e.customer.contact_number,
+          price: PhpFormatter(e.totalAmount),
+          status: e.status,
+          ...e,
+        }))
+      : [];
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      refetch();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, []);
 
   return (
     <View
@@ -93,28 +55,22 @@ function Products(props) {
       }}
     >
       <Wrapper style={styles.container}>
-        <FlatList
-          data={listData}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <OrderCard
-              data={item}
-              image={item.image}
-              onPress={() => navigation.navigate(Routes.ORDER_DETAILS, item)}
-              title={item.customer}
-              subTitle={item.price}
-              quantity={4}
-              status={item.status}
-            />
-          )}
-        />
-
-        {/* <TouchableOpacity
-          style={styles.addBtn}
-          onPress={() => navigation.navigate(Routes.PRODUCT_CREATE)}
+        <ScrollView
+          contentContainerStyle={styles.scrollView}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         >
-          <MaterialCommunityIcons name="plus" size={30} color="#01a699" />
-        </TouchableOpacity> */}
+          {orders?.map((item) => {
+            return (
+              <OrderCard
+                key={item.id}
+                data={item}
+                onPress={() => navigation.navigate(Routes.ORDER_DETAILS, item)}
+              />
+            );
+          })}
+        </ScrollView>
       </Wrapper>
     </View>
   );

@@ -20,7 +20,9 @@ const routes = Object.freeze({
   ORDER_DETAILS: "OrderDetails",
   USERS_TAB: "UsersTab",
   MY_ORDERS: "MyOrders",
+  MY_ORDER_DETAILS: "MyOrderDetails",
   MY_ORDER_TAB: "MyOrderTab",
+  SUCCESS_REGISTER: "SuccessRegister",
 });
 
 export default routes;

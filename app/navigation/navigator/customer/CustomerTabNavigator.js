@@ -12,6 +12,7 @@ const Tab = createBottomTabNavigator();
 
 function CustomerTabNavigator() {
   const { state } = useCart();
+
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -48,7 +49,7 @@ function CustomerTabNavigator() {
           ),
           tabBarLabel: "My Orders",
           tabBarLabelStyle,
-          tabBarBadge: 0,
+          // tabBarBadge: 2,
         }}
       />
       <Tab.Screen

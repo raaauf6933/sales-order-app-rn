@@ -13,8 +13,8 @@ function ListButton(props) {
     <View style={styles.container}>
       {buttons.map((item, index, arr) => {
         return (
-          <>
-            <ListItem onPress={item.action} key={item.key}>
+          <View key={item.key}>
+            <ListItem onPress={item.action}>
               <Icon name={item.icon} type="material-community" color="grey" />
               <ListItem.Content>
                 <ListItem.Title style={[item.style, styles.item]}>
@@ -24,7 +24,7 @@ function ListButton(props) {
               <ListItem.Chevron />
             </ListItem>
             {arr.length - 1 === index ? null : <Divider />}
-          </>
+          </View>
         );
       })}
     </View>

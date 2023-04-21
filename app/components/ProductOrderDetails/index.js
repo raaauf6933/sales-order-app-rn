@@ -9,6 +9,7 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import colors from "./../../config/colors";
 import Text from "./../Text";
+import PhpFormatter from "../../utils/currencyFormatter";
 
 const ProductOrderDetails = ({ image, onPress, title, subTitle, quantity }) => (
   <TouchableWithoutFeedback>
@@ -26,7 +27,7 @@ const ProductOrderDetails = ({ image, onPress, title, subTitle, quantity }) => (
             flex: 1,
           }}
         >
-          <Image style={styles.image} source={image} />
+          <Image style={styles.image} source={{ uri: image }} />
         </View>
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{title} </Text>
@@ -38,7 +39,7 @@ const ProductOrderDetails = ({ image, onPress, title, subTitle, quantity }) => (
             }}
           >
             <View>
-              <Text style={styles.subTitle}>{subTitle}</Text>
+              <Text style={styles.subTitle}>{PhpFormatter(subTitle)}</Text>
               <Text style={styles.qtyTitle}>Quantity: {quantity}</Text>
             </View>
           </View>
