@@ -6,6 +6,7 @@ import AccountNavigator from "./AccountNavigator";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import routes from "../../routes";
 import { useCart } from "../../../context/Cart/context";
+import MyOrderNavigator from "./MyOrderNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -36,6 +37,18 @@ function CustomerTabNavigator() {
           tabBarLabelStyle,
           tabBarBadge:
             state.carts.length === 0 ? undefined : state.carts.length,
+        }}
+      />
+      <Tab.Screen
+        name={routes.MY_ORDER_TAB}
+        component={MyOrderNavigator}
+        options={{
+          tabBarIcon: ({ size, color }) => (
+            <MaterialCommunityIcons name="receipt" size={size} color={color} />
+          ),
+          tabBarLabel: "My Orders",
+          tabBarLabelStyle,
+          tabBarBadge: 0,
         }}
       />
       <Tab.Screen

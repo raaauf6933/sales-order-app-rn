@@ -14,12 +14,13 @@ export const AuthContext = createContext(null);
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, initialState);
 
-  const [verifyAccount] = usePost({
+  const [verifyAccount, verifyAccountOpts] = usePost({
     onComplete: (e) => {
       dispatch({
         type: "LOGIN",
         payload: {
           role: e.data.data.role,
+          user_id: e.data.data.id,
         },
       });
     },
@@ -69,9 +70,10 @@ const AuthProvider = ({ children }) => {
         logout,
         isAuthenticated: state.isLoggedIn,
         error: state.error,
-        loading: state.loading,
+        loading: state.loading || verifyAccountOpts.loading,
         dispatch,
         role: state.role,
+        state,
       }}
     >
       {children}
@@ -82,8 +84,16 @@ const AuthProvider = ({ children }) => {
 export default AuthProvider;
 
 export const useAuth = () => {
-  const { login, logout, isAuthenticated, error, loading, dispatch, role } =
-    useContext(AuthContext);
+  const {
+    login,
+    logout,
+    isAuthenticated,
+    error,
+    loading,
+    dispatch,
+    role,
+    state,
+  } = useContext(AuthContext);
 
   return {
     login,
@@ -94,5 +104,6 @@ export const useAuth = () => {
     loading,
     dispatch,
     role,
+    state,
   };
 };

@@ -1,9 +1,10 @@
 import { StyleSheet, FlatList, View, Text } from "react-native";
-
+import usePost from "./../../hooks/usePost";
 import colors from "../../config/colors";
 import Routes from "../../navigation/routes";
 import Wrapper from "../../components/Wrapper";
 import { useCart } from "../../context/Cart/context";
+import { useAuth } from "../../context/Auth/context";
 import PhpFormatter from "../../utils/currencyFormatter";
 import CartCard from "./../../components/CartCard";
 import AppButton from "../../components/Button";
@@ -33,9 +34,43 @@ const listData = [
 
 function MyCart(props) {
   const { navigation } = props;
-  const { state, removeItem } = useCart();
+  const { state, removeItem, reset } = useCart();
+  const { state: authState } = useAuth();
 
+  const [createOrder, createOrderOpts] = usePost({
+    onComplete: () => {
+      navigation.navigate(Routes.SUCCESS_CHECKOUT);
+      reset();
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
   const carts = state.carts;
+
+  const getTotalAmount = () => {
+    let totalAmount = 0;
+    carts.forEach(
+      (item) => (totalAmount = totalAmount + item.selling_price * item.qty)
+    );
+    return totalAmount;
+  };
+
+  const handleCheckout = () => {
+    const order_lines = carts.map((e) => ({
+      product_id: e.product_id,
+      quantity: e.qty,
+    }));
+
+    createOrder({
+      url: "/create_order",
+      data: {
+        customer_id: authState.user_id,
+        order_lines,
+      },
+      method: "POST",
+    });
+  };
 
   return (
     <View
@@ -66,14 +101,18 @@ function MyCart(props) {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View style={{ flex: 1 }}>
               <Text style={styles.totalLabel}>Total</Text>
-              <Text style={styles.amountLabel}>{PhpFormatter(14000)}</Text>
+              <Text style={styles.amountLabel}>
+                {PhpFormatter(getTotalAmount())}
+              </Text>
             </View>
 
             <View style={styles.checkoutBtn}>
               <AppButton
                 title="Place Order"
                 icon="cart-check"
-                onPress={() => navigation.navigate(Routes.SUCCESS_CHECKOUT)}
+                onPress={handleCheckout}
+                loading={createOrderOpts.loading}
+                disabled={createOrderOpts.loading}
               />
             </View>
           </View>

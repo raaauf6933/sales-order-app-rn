@@ -12,7 +12,16 @@ import Text from "./../Text";
 const Card = ({ image, onPress, title, subTitle, inCart }) => (
   <TouchableWithoutFeedback onPress={inCart ? null : onPress}>
     <View style={[styles.card, inCart ? styles.disabledCard : null]}>
-      <Image style={styles.image} source={{ uri: image }} />
+      <View
+        style={{
+          height: 200,
+          maxWidth: "100%",
+          flex: 1,
+        }}
+      >
+        <Image style={styles.image} source={{ uri: image }} />
+      </View>
+
       <View style={styles.detailsContainer}>
         <View
           style={{
@@ -48,8 +57,10 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   image: {
-    width: "100%",
-    height: 200,
+    flex: 1,
+    width: null,
+    height: null,
+    resizeMode: "contain",
   },
 
   subTitle: {

@@ -23,6 +23,8 @@ const CartProvider = ({ children }) => {
     return carts.some((cart) => cart.id === id);
   };
 
+  const resetCart = () => dispatch({ type: "RESET_CART" });
+
   return (
     <CartContext.Provider
       value={{
@@ -30,6 +32,7 @@ const CartProvider = ({ children }) => {
         addToCart,
         removeItem,
         findItem,
+        reset: resetCart,
       }}
     >
       {children}
@@ -40,12 +43,14 @@ const CartProvider = ({ children }) => {
 export default CartProvider;
 
 export const useCart = () => {
-  const { state, addToCart, removeItem, findItem } = useContext(CartContext);
+  const { state, addToCart, removeItem, findItem, reset } =
+    useContext(CartContext);
 
   return {
     state,
     addToCart,
     removeItem,
     findItem,
+    reset,
   };
 };

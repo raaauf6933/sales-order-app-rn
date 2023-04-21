@@ -7,7 +7,7 @@ import {
   ScrollView,
   RefreshControl,
 } from "react-native";
-
+import LoadingScreen from "./../../components/LoadingScreen";
 import colors from "../../config/colors";
 import Routes from "../../navigation/routes";
 import Wrapper from "../../components/Wrapper";
@@ -18,32 +18,14 @@ import PhpFormatter from "../../utils/currencyFormatter";
 import { useEffect } from "react";
 import { useCallback, useState } from "react";
 
-const listData = [
-  {
-    id: "1",
-    title: "Gentlemans Collection",
-    price: PhpFormatter(6999),
-    image: require("../../../assets/wine_1.jpg"),
-  },
-  {
-    id: "2",
-    title: "CAPERCAILLIE CHARDONNAY",
-    price: PhpFormatter(7888),
-    image: require("../../../assets/wine_3.jpg"),
-  },
-  {
-    id: "3",
-    title: "ENDEAVOUR - Vintage Beer",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-  },
-];
-
 function ListingScreen(props) {
   const { navigation } = props;
 
   const [refreshing, setRefreshing] = useState(false);
-  const { response, refetch } = useApi({ url: "/products", method: "POST" });
+  const { response, refetch, loading } = useApi({
+    url: "/products",
+    method: "POST",
+  });
 
   const { findItem } = useCart();
 
@@ -54,6 +36,7 @@ function ListingScreen(props) {
           product_id: e.product_id,
           product_name: e.product_name,
           price: PhpFormatter(e.product_selling_price),
+          selling_price: e.product_selling_price,
           description: e.description,
           image: e.product_img_url,
           quantity: e.quantity,
@@ -76,25 +59,31 @@ function ListingScreen(props) {
 
   return (
     <Wrapper style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollView}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {products.map((item) => {
-          return (
-            <Card
-              key={item.id}
-              image={item.image}
-              onPress={() => navigation.navigate(Routes.LISTING_DETAILS, item)}
-              title={item.product_name}
-              subTitle={item.price}
-              inCart={findItem(item.id)}
-            />
-          );
-        })}
-      </ScrollView>
+      {loading ? (
+        <LoadingScreen />
+      ) : (
+        <ScrollView
+          contentContainerStyle={styles.scrollView}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {products.map((item) => {
+            return (
+              <Card
+                key={item.id}
+                image={item.image}
+                onPress={() =>
+                  navigation.navigate(Routes.LISTING_DETAILS, item)
+                }
+                title={item.product_name}
+                subTitle={item.price}
+                inCart={findItem(item.id)}
+              />
+            );
+          })}
+        </ScrollView>
+      )}
     </Wrapper>
   );
 }

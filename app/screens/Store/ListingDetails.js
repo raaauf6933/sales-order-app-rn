@@ -23,6 +23,7 @@ function ListingDetailScreen(props) {
     id,
     product_id,
     product_name,
+    selling_price,
   } = route.params;
   const [qty, setQty] = useState(1);
   const { state, addToCart } = useCart();
@@ -36,6 +37,7 @@ function ListingDetailScreen(props) {
       qty,
       id,
       product_id,
+      selling_price,
     });
   };
 
@@ -63,7 +65,15 @@ function ListingDetailScreen(props) {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.contentContainer}>
-          <Image style={styles.image} source={{ uri: image }} />
+          <View
+            style={{
+              height: 400,
+              maxWidth: "100%",
+              flex: 1,
+            }}
+          >
+            <Image style={styles.image} source={{ uri: image }} />
+          </View>
           <View style={styles.detailsContainer}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.price}>{price}</Text>
@@ -113,10 +123,12 @@ function ListingDetailScreen(props) {
               <PlainButton
                 style={[
                   styles.qtyButton,
-                  qty === quantity ? styles.disabledQtyButton : null,
+                  qty === quantity || !quantity
+                    ? styles.disabledQtyButton
+                    : null,
                 ]}
                 onPress={handleAdd}
-                disabled={qty === quantity}
+                disabled={qty === quantity || !quantity}
               >
                 <Text>+</Text>
               </PlainButton>
@@ -134,13 +146,13 @@ function ListingDetailScreen(props) {
       <View
         style={[
           styles.buttonContainer,
-          //  styles.disableAddToCart
+          quantity < 1 ? styles.disableAddToCart : null,
         ]}
       >
         <Button
-          title="Add to Cart"
-          color="secondary"
-          onPress={handleAddToCart}
+          title={quantity > 0 ? "Add to Cart" : "Out of Stock"}
+          color={quantity > 0 ? "secondary" : "danger"}
+          onPress={quantity > 0 ? handleAddToCart : null}
         />
       </View>
     </View>
@@ -170,8 +182,10 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   image: {
-    width: "100%",
-    height: 300,
+    flex: 1,
+    width: null,
+    height: null,
+    resizeMode: "contain",
   },
   price: {
     color: colors.secondary,
