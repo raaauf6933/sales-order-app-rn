@@ -19,6 +19,8 @@ const routes = Object.freeze({
   ORDERS: "Orders",
   ORDER_DETAILS: "OrderDetails",
   USERS_TAB: "UsersTab",
+  USERS: "Users",
+  CREATE_USER: "CreateUser",
   MY_ORDERS: "MyOrders",
   MY_ORDER_DETAILS: "MyOrderDetails",
   MY_ORDER_TAB: "MyOrderTab",

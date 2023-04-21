@@ -9,11 +9,12 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const storage = getStorage();
 
-const FormImagePicker = ({ name }) => {
+const FormImagePicker = ({ name, setLoading }) => {
   const { errors, setFieldValue, touched, values } = useFormikContext();
   const uris = values[name];
 
   const handleAdd = async (uri) => {
+    setLoading(true);
     try {
       const response = await fetch(uri);
       const blob = await response.blob();
@@ -30,6 +31,8 @@ const FormImagePicker = ({ name }) => {
       setFieldValue(name, [url]);
     } catch (error) {
       alert(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -18,6 +18,7 @@ import usePost from "../../hooks/usePost";
 import routes from "./../../navigation/routes";
 import useApi from "../../hooks/useApi";
 import LoadingScreen from "../../components/LoadingScreen";
+import { useState } from "react";
 
 const validationSchema = Yup.object().shape({
   product_name: Yup.string().required().label("Product Name"),
@@ -32,7 +33,7 @@ const validationSchema = Yup.object().shape({
 
 function ProductEdit({ navigation, ...rest }) {
   const productId = rest.route.params.id;
-
+  const [loadingImage, setLoadingImage] = useState(false);
   const { response, loading } = useApi({
     url: "/product",
     method: "POST",
@@ -123,7 +124,7 @@ function ProductEdit({ navigation, ...rest }) {
               <Text style={{ fontSize: 20, fontWeight: "300", marginTop: 5 }}>
                 Product Image
               </Text>
-              <FormImagePicker name="images" />
+              <FormImagePicker name="images" setLoading={setLoadingImage} />
               <FormField
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -142,8 +143,8 @@ function ProductEdit({ navigation, ...rest }) {
                   height: 50,
                 }}
                 color="secondary"
-                loading={editProductOpts.loading}
-                disabled={editProductOpts.loading}
+                loading={editProductOpts.loading || loadingImage}
+                disabled={editProductOpts.loading || loadingImage}
               />
             </Form>
           ) : (

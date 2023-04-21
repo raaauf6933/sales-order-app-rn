@@ -46,6 +46,15 @@ const AuthProvider = ({ children }) => {
     },
   });
 
+  const [createUser, createUserOpts] = usePost({
+    onComplete: (e) => {
+      navigate(routes.USERS);
+    },
+    onError: (err) => {
+      console.log(err.message);
+    },
+  });
+
   const login = async ({ email, password, role }) => {
     dispatch({ type: "SET_ERROR", payload: false });
     dispatch({ type: "SET_LOADING", payload: true });
@@ -74,8 +83,25 @@ const AuthProvider = ({ children }) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
 
-      await createCustomer({
+      await createUser({
         url: "/create_customer",
+        method: "POST",
+        data: {
+          ...form,
+        },
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const registerUser = async (form) => {
+    const { email, password } = form;
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+
+      await createUser({
+        url: "/create_user",
         method: "POST",
         data: {
           ...form,
@@ -108,10 +134,12 @@ const AuthProvider = ({ children }) => {
         loading:
           state.loading ||
           verifyAccountOpts.loading ||
-          createCustomerOpts.loading,
+          createCustomerOpts.loading ||
+          createUserOpts.loading,
         dispatch,
         role: state.role,
         state,
+        registerUser,
       }}
     >
       {children}
@@ -132,6 +160,7 @@ export const useAuth = () => {
     dispatch,
     role,
     state,
+    registerUser,
   } = useContext(AuthContext);
 
   return {
@@ -145,5 +174,6 @@ export const useAuth = () => {
     dispatch,
     role,
     state,
+    registerUser,
   };
 };

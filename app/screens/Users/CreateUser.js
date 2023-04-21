@@ -8,6 +8,7 @@ import {
 import Wrapper from "../../components/Wrapper";
 import * as Yup from "yup";
 import colors from "../../config/colors";
+import { useAuth } from "./../../context/Auth/context";
 import {
   Form,
   FormField,
@@ -19,32 +20,18 @@ import routes from "./../../navigation/routes";
 import { useState } from "react";
 
 const validationSchema = Yup.object().shape({
-  product_name: Yup.string().required().label("Product Name"),
-  product_description: Yup.string()
-    .required()
-    .min(4)
-    .label("Product Description"),
-  images: Yup.array().min(1, "Please select atleast one image"),
-  product_selling_price: Yup.number().required().label("Selling Price"),
+  first_name: Yup.string().required().label("First Name"),
+  last_name: Yup.string().required().min(4).label("Last Name"),
+
+  email: Yup.string().required().label("Email"),
+  password: Yup.string().required().min(4).label("Password"),
 });
 
-function ProductCreate({ navigation }) {
-  const [loadingImage, setLoadingImage] = useState(false);
-  const [createProduct, createProductOpts] = usePost({
-    onComplete: (e) => {
-      navigation.navigate(routes.PRODUCTS);
-    },
-    onError: (err) => {
-      console.log(err.response);
-    },
-  });
+function CreateUser({ navigation }) {
+  const { loading, registerUser } = useAuth();
 
-  const handleSave = async (data) => {
-    createProduct({
-      url: "/create_product",
-      data,
-      method: "POST",
-    });
+  const handleSave = async (form) => {
+    registerUser(form);
   };
 
   return (
@@ -57,10 +44,10 @@ function ProductCreate({ navigation }) {
         <View style={styles.formContainer}>
           <Form
             initialValues={{
-              images: [],
-              product_name: "",
-              product_description: "",
-              product_selling_price: null,
+              first_name: "",
+              last_name: "",
+              email: "",
+              password: "",
             }}
             onSubmit={handleSave}
             validationSchema={validationSchema}
@@ -68,8 +55,8 @@ function ProductCreate({ navigation }) {
             <FormField
               autoCapitalize="none"
               autoCorrect={false}
-              name="product_name"
-              placeholder="Product Name"
+              name="first_name"
+              placeholder="First Name"
               style={{
                 height: 50,
               }}
@@ -80,8 +67,8 @@ function ProductCreate({ navigation }) {
             <FormField
               autoCapitalize="none"
               autoCorrect={false}
-              name="product_description"
-              placeholder="Description"
+              name="last_name"
+              placeholder="Last Name"
               style={{
                 height: 50,
               }}
@@ -92,8 +79,10 @@ function ProductCreate({ navigation }) {
             <FormField
               autoCapitalize="none"
               autoCorrect={false}
-              name="product_selling_price"
-              placeholder="Selling Price"
+              keyboardType="email-address"
+              name="email"
+              placeholder="Email"
+              textContentType="emailAddress"
               style={{
                 height: 50,
               }}
@@ -101,18 +90,28 @@ function ProductCreate({ navigation }) {
                 borderRadius: null,
               }}
             />
-            <Text style={{ fontSize: 20, fontWeight: "300", marginTop: 5 }}>
-              Product Image
-            </Text>
-            <FormImagePicker name="images" setLoading={setLoadingImage} />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              name="password"
+              placeholder="Password"
+              secureTextEntry
+              textContentType="password"
+              style={{
+                height: 50,
+              }}
+              containerStyle={{
+                borderRadius: null,
+              }}
+            />
             <SubmitButton
               title="Save"
               style={{
                 height: 50,
               }}
               color="secondary"
-              loading={createProductOpts.loading || loadingImage}
-              disabled={createProductOpts.loading || loadingImage}
+              loading={loading}
+              disabled={loading}
             />
           </Form>
         </View>
@@ -127,4 +126,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductCreate;
+export default CreateUser;
