@@ -42,15 +42,20 @@ const useApi = (axiosParams, options) => {
       setResponse(result);
       return result;
     } catch (err) {
-      const typedError = err;
-      setError(typedError);
+      if (err.response.data) {
+        setError(err.response.data);
+        return err.response.data;
+      } else {
+        const typedError = err;
+        setError(typedError);
+      }
 
       // if (typedError.response?.data?.code === "TOKEN_EXPIRED") {
       //   user.logout();
       // } else if (typedError.response?.data?.code === "INVALID_TOKEN") {
       //   user.logout();
       // }
-      return typedError;
+      return err;
     } finally {
       // dispatch({ type: AppStateActionType.FINISH_LOADING });
       setloading(false);

@@ -3,7 +3,7 @@ import "./../../../firebase";
 import { createContext, useContext, useReducer } from "react";
 import { API_URL } from "@env";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import useApi from "./../../hooks/useApi";
+import usePost from "./../../hooks/usePost";
 import authStorage from "./utils";
 import { AuthReducer, initialState } from "./reducers";
 
@@ -14,34 +14,45 @@ export const AuthContext = createContext(null);
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, initialState);
 
-  const { refetch, loading: authLoading } = useApi(null, {
-    skip: true,
+  const [verifyAccount] = usePost({
+    onComplete: (e) => {
+      dispatch({
+        type: "LOGIN",
+        payload: {
+          role: e.data.data.role,
+        },
+      });
+    },
+    onError: (err) => {
+      dispatch({ type: "SET_ERROR", payload: true });
+    },
   });
 
-  const login = async ({ email, password }) => {
+  const login = async ({ email, password, role }) => {
+    dispatch({ type: "SET_ERROR", payload: false });
+    dispatch({ type: "SET_LOADING", payload: true });
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
-      const verify_result = await refetch({
-        url: "/verify_user",
+      verifyAccount({
+        url: "/verify_account",
         data: {
           email,
+          role,
         },
         method: "POST",
       });
 
-      if (!verify_result?.data) {
-        dispatch({ type: "SET_ERROR" });
-        return;
-      }
       await authStorage.storeToken(result._tokenResponse.idToken);
-
-      dispatch({ type: "LOGIN" });
     } catch (error) {
-      alert(error.message);
+      dispatch({ type: "SET_ERROR", payload: true });
+      // alert(error.message);
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
     }
   };
 
   const logout = async () => {
+    dispatch({ type: "SET_ERROR", payload: false });
     await authStorage.removeToken();
     dispatch({ type: "LOGOUT" });
 
@@ -58,7 +69,9 @@ const AuthProvider = ({ children }) => {
         logout,
         isAuthenticated: state.isLoggedIn,
         error: state.error,
-        loading: authLoading,
+        loading: state.loading,
+        dispatch,
+        role: state.role,
       }}
     >
       {children}
@@ -69,7 +82,7 @@ const AuthProvider = ({ children }) => {
 export default AuthProvider;
 
 export const useAuth = () => {
-  const { login, logout, isAuthenticated, error, loading } =
+  const { login, logout, isAuthenticated, error, loading, dispatch, role } =
     useContext(AuthContext);
 
   return {
@@ -79,5 +92,7 @@ export const useAuth = () => {
     getUser: authStorage.getUser,
     error,
     loading,
+    dispatch,
+    role,
   };
 };

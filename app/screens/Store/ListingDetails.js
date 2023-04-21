@@ -6,31 +6,69 @@ import {
 } from "react-native";
 
 import Text from "./../../components/Text";
-import ListItem from "./../../components/ListItem";
+import { useState } from "react";
 import colors from "./../../config/colors";
 import Button from "./../../components/Button";
 import { ScrollView } from "react-native-gesture-handler";
+import { useCart } from "../../context/Cart/context";
 
 function ListingDetailScreen(props) {
   const { route } = props;
-  const { image, title, price } = route.params;
+  const {
+    image,
+    title,
+    price,
+    description,
+    quantity,
+    id,
+    product_id,
+    product_name,
+  } = route.params;
+  const [qty, setQty] = useState(1);
+  const { state, addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    addToCart({
+      image,
+      product_name,
+      price,
+      description,
+      qty,
+      id,
+      product_id,
+    });
+  };
+
+  const handleAdd = () => {
+    setQty((prevState) => {
+      if (prevState === quantity) {
+        return prevState;
+      } else {
+        return prevState + 1;
+      }
+    });
+  };
+
+  const handleMinus = () => {
+    setQty((prevState) => {
+      if (prevState === 1) {
+        return prevState;
+      } else {
+        return prevState - 1;
+      }
+    });
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.contentContainer}>
-          <Image style={styles.image} source={image} />
+          <Image style={styles.image} source={{ uri: image }} />
           <View style={styles.detailsContainer}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.price}>{price}</Text>
             <View>
-              <Text numberOfLines={10}>
-                Description - Lorem ipsum dolor sit amet, consectetur adipiscing
-                elit. Praesent vulputate tempus sem quis rhoncus. Sed
-                pellentesque luctus vestibulum. Sed sagittis hendrerit metus,
-                vitae suscipit nisi placerat vitae. Cras convallis molestie
-                libero sed
-              </Text>
+              <Text numberOfLines={10}>Description - {description}</Text>
             </View>
             <View
               style={{
@@ -42,7 +80,9 @@ function ListingDetailScreen(props) {
               <Text style={{ fontSize: 24, fontWeight: "600" }}>
                 Available Stocks:{" "}
               </Text>
-              <Text style={{ fontSize: 24, fontWeight: "300" }}>6</Text>
+              <Text style={{ fontSize: 24, fontWeight: "300" }}>
+                {quantity}
+              </Text>
             </View>
             <View
               style={{
@@ -51,8 +91,15 @@ function ListingDetailScreen(props) {
                 flex: 1,
               }}
             >
-              <Text style={{ fontSize: 22 }}>QTY</Text>
-              <PlainButton style={[styles.qtyButton, styles.disabledQtyButton]}>
+              <Text style={{ fontSize: 22 }}>Quantity </Text>
+              <PlainButton
+                style={[
+                  styles.qtyButton,
+                  qty === 1 ? styles.disabledQtyButton : null,
+                ]}
+                onPress={handleMinus}
+                disabled={qty === 1}
+              >
                 <Text>-</Text>
               </PlainButton>
               <Text
@@ -61,9 +108,16 @@ function ListingDetailScreen(props) {
                   fontSize: 22,
                 }}
               >
-                1
+                {qty}
               </Text>
-              <PlainButton style={[styles.qtyButton]}>
+              <PlainButton
+                style={[
+                  styles.qtyButton,
+                  qty === quantity ? styles.disabledQtyButton : null,
+                ]}
+                onPress={handleAdd}
+                disabled={qty === quantity}
+              >
                 <Text>+</Text>
               </PlainButton>
             </View>
@@ -77,8 +131,17 @@ function ListingDetailScreen(props) {
       </View> */}
         </View>
       </ScrollView>
-      <View style={[styles.buttonContainer, styles.disableAddToCart]}>
-        <Button title="Add to Cart" color="secondary" onPress={() => null} />
+      <View
+        style={[
+          styles.buttonContainer,
+          //  styles.disableAddToCart
+        ]}
+      >
+        <Button
+          title="Add to Cart"
+          color="secondary"
+          onPress={handleAddToCart}
+        />
       </View>
     </View>
   );

@@ -9,14 +9,26 @@ import {
 import colors from "./../../config/colors";
 import Text from "./../Text";
 
-const Card = ({ image, onPress, title, subTitle }) => (
-  <TouchableWithoutFeedback onPress={onPress}>
-    <View style={styles.card}>
-      <Image style={styles.image} source={image} />
-
+const Card = ({ image, onPress, title, subTitle, inCart }) => (
+  <TouchableWithoutFeedback onPress={inCart ? null : onPress}>
+    <View style={[styles.card, inCart ? styles.disabledCard : null]}>
+      <Image style={styles.image} source={{ uri: image }} />
       <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{title} </Text>
-        <Text style={styles.subTitle}>{subTitle}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <View>
+            <Text style={styles.title}>{title} </Text>
+            <Text style={styles.subTitle}>{subTitle}</Text>
+          </View>
+          {inCart ? (
+            <Text style={{ color: colors.danger }}>Already in Cart</Text>
+          ) : null}
+        </View>
       </View>
     </View>
   </TouchableWithoutFeedback>
@@ -28,6 +40,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: colors.white,
     marginBottom: 20,
+  },
+  disabledCard: {
+    opacity: 0.5,
   },
   detailsContainer: {
     padding: 15,

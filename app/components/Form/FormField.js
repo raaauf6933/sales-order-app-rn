@@ -5,7 +5,8 @@ import TextInput from "../TextInput";
 import ErrorMessage from "./ErrorMessage";
 
 const AppFormField = ({ icon, name, placeholder, width, ...otherProps }) => {
-  const { errors, handleChange, setFieldTouched, touched } = useFormikContext();
+  const { errors, handleChange, setFieldTouched, touched, initialValues } =
+    useFormikContext();
 
   return (
     <>
@@ -15,6 +16,7 @@ const AppFormField = ({ icon, name, placeholder, width, ...otherProps }) => {
         icon={icon}
         placeholder={placeholder}
         width={width}
+        defaultValue={initialValues[name]}
         {...otherProps}
       />
       <ErrorMessage error={errors[name]} visible={touched[name]} />

@@ -14,6 +14,7 @@ const routes = Object.freeze({
   SUCCESS_CHECKOUT: "SuccessCheckout",
   PRODUCTS: "Products",
   PRODUCT_CREATE: "ProductCreate",
+  PRODUCT_EDIT: "ProductEdit",
   ORDERS_TAB: "OrderTab",
   ORDERS: "Orders",
   ORDER_DETAILS: "OrderDetails",

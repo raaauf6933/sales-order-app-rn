@@ -4,8 +4,10 @@ import {
   View,
   Text,
   TouchableOpacity,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
-
+import { useCallback, useState } from "react";
 import colors from "../../config/colors";
 import Routes from "../../navigation/routes";
 import Wrapper from "../../components/Wrapper";
@@ -14,62 +16,40 @@ import PhpFormatter from "../../utils/currencyFormatter";
 import CartCard from "./../../components/CartCard";
 import AppButton from "../../components/Button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
+import useApi from "./../../hooks/useApi";
 import ProductCard from "../../components/ProductCard";
-
-const listData = [
-  {
-    id: "1",
-    title: "Gentlemans Collection",
-    price: PhpFormatter(6999),
-    image: require("../../../assets/wine_1.jpg"),
-  },
-  {
-    id: "2",
-    title: "CAPERCAILLIE CHARDONNAY",
-    price: PhpFormatter(7888),
-    image: require("../../../assets/wine_3.jpg"),
-  },
-  {
-    id: "3",
-    title: "ENDEAVOUR - Vintage Beer",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-  },
-  {
-    id: "4",
-    title: "ENDEAVOUR - Vintage Beer",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-  },
-  {
-    id: "5",
-    title: "ENDEAVOUR - Vintage Beer",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-  },
-  {
-    id: "6",
-    title: "ENDEAVOUR - Vintage Beer",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-  },
-  {
-    id: "7",
-    title: "ENDEAVOUR - Vintage Beer",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-  },
-  {
-    id: "8",
-    title: "ENDEAVOUR - Vintage Beer",
-    price: PhpFormatter(240),
-    image: require("../../../assets/wine_4.jpg"),
-  },
-];
+import { useEffect } from "react";
 
 function Products(props) {
   const { navigation } = props;
+  const [refreshing, setRefreshing] = useState(false);
+  const { response, refetch } = useApi({ url: "/products", method: "POST" });
+
+  const products =
+    response && response?.data
+      ? response?.data?.data?.map((e) => ({
+          id: e.id,
+          product_id: e.product_id,
+          product_name: e.product_name,
+          price: PhpFormatter(e.product_selling_price),
+          image: e.product_img_url,
+          quantity: e.quantity,
+        }))
+      : [];
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      refetch();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, []);
 
   return (
     <View
@@ -78,20 +58,33 @@ function Products(props) {
       }}
     >
       <Wrapper style={styles.container}>
-        <FlatList
-          data={listData}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <ProductCard
-              image={item.image}
-              onPress={() => navigation.navigate(Routes.LISTING_DETAILS, item)}
-              title={item.title}
-              subTitle={item.price}
-              quantity={4}
-            />
-          )}
-        />
-
+        <ScrollView
+          contentContainerStyle={styles.scrollView}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {products?.map((item) => {
+            return (
+              <ProductCard
+                key={item.id}
+                image={item.image}
+                onPress={() => navigation.navigate(Routes.PRODUCT_EDIT, item)}
+                title={item.product_name}
+                subTitle={item.price}
+                quantity={item.quantity}
+                productId={item.product_id}
+              />
+            );
+          })}
+          {/* <FlatList
+            data={products}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              
+            )}
+          /> */}
+        </ScrollView>
         <TouchableOpacity
           style={styles.addBtn}
           onPress={() => navigation.navigate(Routes.PRODUCT_CREATE)}

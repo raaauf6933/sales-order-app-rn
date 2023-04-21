@@ -14,6 +14,8 @@ import {
   SubmitButton,
   FormImagePicker,
 } from "../../components/Form";
+import usePost from "../../hooks/usePost";
+import routes from "./../../navigation/routes";
 
 const validationSchema = Yup.object().shape({
   product_name: Yup.string().required().label("Product Name"),
@@ -25,9 +27,22 @@ const validationSchema = Yup.object().shape({
   product_selling_price: Yup.number().required().label("Selling Price"),
 });
 
-function ProductCreate() {
+function ProductCreate({ navigation }) {
+  const [createProduct, createProductOpts] = usePost({
+    onComplete: (e) => {
+      navigation.navigate(routes.PRODUCTS);
+    },
+    onError: (err) => {
+      console.log(err.response);
+    },
+  });
+
   const handleSave = async (data) => {
-    console.log(data);
+    createProduct({
+      url: "/create_product",
+      data,
+      method: "POST",
+    });
   };
 
   return (
@@ -43,7 +58,7 @@ function ProductCreate() {
               images: [],
               product_name: "",
               product_description: "",
-              product_selling_price: 0,
+              product_selling_price: null,
             }}
             onSubmit={handleSave}
             validationSchema={validationSchema}
@@ -94,6 +109,8 @@ function ProductCreate() {
                 height: 50,
               }}
               color="secondary"
+              loading={createProductOpts.loading}
+              disabled={createProductOpts.loading}
             />
           </Form>
         </View>

@@ -10,7 +10,15 @@ import { ScrollView } from "react-native-gesture-handler";
 import colors from "./../../config/colors";
 import Text from "./../Text";
 
-const CartCard = ({ image, onPress, title, subTitle, quantity }) => (
+const CartCard = ({
+  id,
+  image,
+  onPress,
+  title,
+  subTitle,
+  quantity,
+  removeItem,
+}) => (
   <TouchableWithoutFeedback onPress={onPress}>
     <View style={styles.card}>
       <View
@@ -26,7 +34,7 @@ const CartCard = ({ image, onPress, title, subTitle, quantity }) => (
             flex: 1,
           }}
         >
-          <Image style={styles.image} source={image} />
+          <Image style={styles.image} source={{ uri: image }} />
         </View>
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{title} </Text>
@@ -42,7 +50,10 @@ const CartCard = ({ image, onPress, title, subTitle, quantity }) => (
               <Text style={styles.qtyTitle}>QTY: {quantity}</Text>
             </View>
             <View style={{ alignSelf: "flex-end" }}>
-              <PlainButton style={styles.removeBtn}>
+              <PlainButton
+                style={styles.removeBtn}
+                onPress={() => removeItem(id)}
+              >
                 <Text style={{ color: colors.danger }}>Remove</Text>
               </PlainButton>
             </View>

@@ -5,10 +5,12 @@ import CartNavigator from "./CartNavigator";
 import AccountNavigator from "./AccountNavigator";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import routes from "../../routes";
+import { useCart } from "../../../context/Cart/context";
 
 const Tab = createBottomTabNavigator();
 
 function CustomerTabNavigator() {
+  const { state } = useCart();
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -32,6 +34,8 @@ function CustomerTabNavigator() {
           ),
           tabBarLabel: "My Cart",
           tabBarLabelStyle,
+          tabBarBadge:
+            state.carts.length === 0 ? undefined : state.carts.length,
         }}
       />
       <Tab.Screen

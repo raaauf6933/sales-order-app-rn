@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Image, StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import * as Yup from "yup";
 
 import Wrapper from "../../components/Wrapper";
-import { Form, FormField, SubmitButton } from "../../components/Form";
+import { Form, FormField, SubmitButton } from "./../../components/Form";
 import colors from "../../config/colors";
 
 import { useAuth } from "../../context/Auth/context";
@@ -18,10 +18,14 @@ const validationSchema = Yup.object().shape({
 });
 
 const Login = ({ navigation }) => {
-  const { login, error, loading } = useAuth();
+  const { login, error, loading, dispatch } = useAuth();
+
+  useEffect(() => {
+    dispatch({ type: "SET_ERROR", payload: false });
+  }, []);
 
   const handleLogin = async ({ email, password }) => {
-    await login({ email, password });
+    await login({ email, password, role: "CUSTOMER" });
   };
 
   return (
@@ -87,11 +91,12 @@ const Login = ({ navigation }) => {
             style={{
               height: 50,
             }}
+            disabled={loading}
+            loading={loading}
           />
         </Form>
         <TouchableOpacity
           onPress={() => navigation.navigate(routes.ADMIN_LOGIN)}
-          disabled={loading}
         >
           <View>
             <Text

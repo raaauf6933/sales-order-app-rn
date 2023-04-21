@@ -1,25 +1,43 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
 
 import colors from "./../../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-const AppButton = ({ title, onPress, color = "primary", icon }) => {
+const AppButton = ({
+  title,
+  onPress,
+  color = "primary",
+  icon,
+  disabled,
+  loading,
+}) => {
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: colors[color] }]}
       onPress={onPress}
       activeOpacity={0.5}
+      disabled={disabled || loading}
     >
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Text style={styles.text}>{title}</Text>
-        {icon ? (
-          <MaterialCommunityIcons
-            name={icon}
-            size={20}
-            style={{ color: colors.white, marginLeft: 10 }}
-          />
-        ) : null}
-      </View>
+      {loading ? (
+        <ActivityIndicator color={colors.white} size="small" />
+      ) : (
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text style={styles.text}>{title}</Text>
+          {icon ? (
+            <MaterialCommunityIcons
+              name={icon}
+              size={20}
+              style={{ color: colors.white, marginLeft: 10 }}
+            />
+          ) : null}
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

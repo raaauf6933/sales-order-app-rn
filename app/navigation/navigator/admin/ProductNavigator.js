@@ -4,6 +4,7 @@ const Stack = createNativeStackNavigator();
 import routes from "../../routes";
 import Products from "../../../screens/Products/Products";
 import ProductCreate from "../../../screens/Products/ProductCreate";
+import ProductEdit from "../../../screens/Products/ProductEdit";
 
 function ProductNavigator() {
   return (
@@ -18,6 +19,13 @@ function ProductNavigator() {
       <Stack.Screen
         name={routes.PRODUCT_CREATE}
         component={ProductCreate}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.PRODUCT_EDIT}
+        component={ProductEdit}
         options={{
           headerShown: false,
         }}

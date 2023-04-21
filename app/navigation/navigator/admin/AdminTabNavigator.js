@@ -25,7 +25,7 @@ function AdminTabNavigator() {
           ),
           tabBarLabel: "Products",
           tabBarLabelStyle,
-          title: "Store",
+          title: "Products",
         }}
       />
       <Tab.Screen

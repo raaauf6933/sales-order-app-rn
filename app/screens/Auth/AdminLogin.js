@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Image, StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import * as Yup from "yup";
 
@@ -8,8 +8,6 @@ import colors from "../../config/colors";
 
 import { useAuth } from "../../context/Auth/context";
 
-import { db } from "./../../../firebase";
-import { collection, getDocs } from "firebase/firestore";
 import routes from "../../navigation/routes";
 
 const validationSchema = Yup.object().shape({
@@ -18,10 +16,14 @@ const validationSchema = Yup.object().shape({
 });
 
 const Login = ({ navigation }) => {
-  const { login } = useAuth();
+  const { login, error, loading, dispatch } = useAuth();
+
+  useEffect(() => {
+    dispatch({ type: "SET_ERROR", payload: false });
+  }, []);
 
   const handleLogin = async ({ email, password }) => {
-    await login({ email, password });
+    await login({ email, password, role: "STORE_ADMIN" });
   };
 
   return (
@@ -70,11 +72,27 @@ const Login = ({ navigation }) => {
               height: 50,
             }}
           />
+          {error ? (
+            <View>
+              <Text
+                style={{
+                  color: colors.danger,
+                  fontSize: 20,
+                  fontWeight: "600",
+                  padding: 6,
+                }}
+              >
+                *Email or Password is incorrect*
+              </Text>
+            </View>
+          ) : null}
           <SubmitButton
             title="Login"
             style={{
               height: 50,
             }}
+            disabled={loading}
+            loading={loading}
           />
         </Form>
         <TouchableOpacity onPress={() => navigation.navigate(routes.LOGIN)}>

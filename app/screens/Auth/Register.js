@@ -16,8 +16,6 @@ const validationSchema = Yup.object().shape({
 
 const Register = () => {
   const handleRegistration = async ({ email, password }) => {
-    console.log({ email, password });
-
     try {
       const result = await createUserWithEmailAndPassword(
         auth,
@@ -26,8 +24,6 @@ const Register = () => {
       );
 
       const user = result.user;
-
-      console.log(user.email);
     } catch (error) {
       alert(error.message);
     }

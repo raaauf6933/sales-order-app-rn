@@ -10,7 +10,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import colors from "./../../config/colors";
 import Text from "./../Text";
 
-const ProductCard = ({ image, onPress, title, subTitle, quantity }) => (
+const ProductCard = ({
+  image,
+  onPress,
+  title,
+  subTitle,
+  quantity,
+  productId,
+}) => (
   <TouchableWithoutFeedback onPress={onPress}>
     <View style={styles.card}>
       <View
@@ -24,9 +31,10 @@ const ProductCard = ({ image, onPress, title, subTitle, quantity }) => (
             height: 100,
             maxWidth: 100,
             flex: 1,
+            padding: 10,
           }}
         >
-          <Image style={styles.image} source={image} />
+          <Image style={styles.image} source={{ uri: image }} />
         </View>
         <View style={styles.detailsContainer}>
           <Text style={styles.subTitle}>Product Name: {title} </Text>
@@ -38,7 +46,7 @@ const ProductCard = ({ image, onPress, title, subTitle, quantity }) => (
             }}
           >
             <View>
-              <Text style={styles.subTitle}>Product ID: AES2121</Text>
+              <Text style={styles.subTitle}>Product ID: {productId}</Text>
               <Text style={styles.subTitle}>Price: {subTitle}</Text>
               <Text style={styles.qtyTitle}>Available Stock: {quantity}</Text>
             </View>
