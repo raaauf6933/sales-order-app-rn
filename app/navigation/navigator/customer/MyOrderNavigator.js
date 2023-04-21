@@ -5,6 +5,7 @@ import MyOrderScreen from "../../../screens/MyOrders/MyOrders";
 
 import MyOrderDetailsScreen from "../../../screens/MyOrders/MyOrderDetails/MyOrderDetails";
 import routes from "../../routes";
+import Receipt from "../../../screens/MyOrders/Receipt";
 
 function MyOrderNavigator() {
   return (
@@ -17,6 +18,13 @@ function MyOrderNavigator() {
       <Stack.Screen
         name={routes.MY_ORDER_DETAILS}
         component={MyOrderDetailsScreen}
+      />
+      <Stack.Screen
+        name={routes.RECEIPT}
+        component={Receipt}
+        options={{
+          headerTitle: "Receipt",
+        }}
       />
     </Stack.Navigator>
   );

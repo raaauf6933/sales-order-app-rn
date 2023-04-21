@@ -25,6 +25,7 @@ const routes = Object.freeze({
   MY_ORDER_DETAILS: "MyOrderDetails",
   MY_ORDER_TAB: "MyOrderTab",
   SUCCESS_REGISTER: "SuccessRegister",
+  RECEIPT: "Receipt",
 });
 
 export default routes;

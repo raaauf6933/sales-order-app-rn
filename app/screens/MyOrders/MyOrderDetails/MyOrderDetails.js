@@ -6,6 +6,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import OrderInfo from "./components/OrderInfo";
 import OrderDetails from "./components/OrderDetails";
 import { Button, Card } from "@rneui/base";
+import routes from "../../../navigation/routes";
 
 const MyOrderDetails = (props) => {
   const data = props.route.params;
@@ -15,10 +16,14 @@ const MyOrderDetails = (props) => {
       <Wrapper style={styles.container}>
         <OrderInfo data={data} />
         <OrderDetails data={data} />
-        {/* <Card>
+        <Card>
           <Card.Title style={{ textAlign: "left" }}>Actions</Card.Title>
-          <Button>In-Process</Button>
-        </Card> */}
+          <Button
+            onPress={() => props.navigation.navigate(routes.RECEIPT, data)}
+          >
+            View Receipt
+          </Button>
+        </Card>
       </Wrapper>
     </ScrollView>
   );

@@ -28,7 +28,7 @@ function SuccessCheckout(props) {
           <AppButton
             title="Back to Store"
             color="secondary"
-            onPress={() => navigation.navigate(routes.MY_ORDERS)}
+            onPress={() => navigation.navigate(routes.MY_ORDER_TAB)}
           />
         </View>
       </View>

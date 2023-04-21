@@ -49,6 +49,7 @@ function CustomerTabNavigator() {
           ),
           tabBarLabel: "My Orders",
           tabBarLabelStyle,
+          headerTitle: "My Orders",
           // tabBarBadge: 2,
         }}
       />

@@ -83,7 +83,7 @@ const AuthProvider = ({ children }) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
 
-      await createUser({
+      await createCustomer({
         url: "/create_customer",
         method: "POST",
         data: {
